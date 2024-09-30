@@ -1,8 +1,9 @@
 # ED-DATA
-Projeto voltando para engenharia de dados
+Projeto voltando para engenharia de dados para extração, tratamento e carregamento de dados.
+
 
 ## Índice
-- [Visão Geral do Projeto](#project-overview)
+- [Visão Geral do Projeto](#project-overview) - 
 - [Características](#features)
 - [Instalação](#installation)
 - [Usage](#usage) - Em construção
