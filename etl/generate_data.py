@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import pandas as pd
 import random
@@ -7,11 +7,16 @@ from faker import Faker
 from etl.data_manager import DataManager
 
 
-class IoTDataGenerator:
+class BaseDataGenerator:
+    def __init__(self, data_path):
+        self.fake = Faker('pt-BR')
+        self.data_manager = DataManager(data_path)
+
+
+class IoTDataGenerator(BaseDataGenerator):
 
     def __init__(self):
-        self.fake = Faker('pt-BR')
-        self.data_manager = DataManager('./data')
+        super().__init__('./data')
 
     def generate_data_equipaments(self, equipment_id, n=1000):
         """Generate data for equipaments"""
@@ -31,3 +36,23 @@ class IoTDataGenerator:
         return data
 
 
+class EquipmentMaintenanceDataGenerator(BaseDataGenerator):
+    def __init__(self):
+        super().__init__('./data')
+
+    def generate_data_maintenances(self, equipment_id, n=1000):
+        """Generate data for maintenances"""
+        maintenance_data = []
+        for _ in range(n):
+
+            hours_worked = random.uniform(50, 200)  # Exemplo: entre 50 e 200 horas
+            productivity = random.uniform(70, 100)  # Produtividade entre 70% e 100%
+
+            maintenance_data.append({
+                "equipment_id": equipment_id,
+                "maintenance_type": random.choice(["Repair", "Maintenance", "Replace"]),
+                "hours_worked": round(hours_worked, 2),
+                "productivity": round(productivity, 2),
+            })
+        self.data_manager.save_to_parquet(maintenance_data, 'maintenances')
+        return maintenance_data

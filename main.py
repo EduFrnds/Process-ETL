@@ -1,22 +1,34 @@
 import logging
 
-from etl.generate_data import IoTDataGenerator
+from log_config import logging_data
+
+from etl.generate_data import IoTDataGenerator, EquipmentMaintenanceDataGenerator
 
 
-def generate_iot_data():
+def generate_data_process():
     # 1. Geração de dados (Parquet)
+    generate_data = IoTDataGenerator()
+    generate_data_maintenance = EquipmentMaintenanceDataGenerator()
+
+    logger = logging.getLogger('process-etl')  # Obtém o logger que configuramos
+    logger.info('Iniciando o processo de Geração de Dados...')
+
     try:
-        logging.info("Iniciando o processo ETL...")
-        generate_data = IoTDataGenerator()
-        generate_data.generate_data_equipaments(1, 20)
+        generate_data.generate_data_equipaments(1, 1000)
+        generate_data_maintenance.generate_data_maintenances(1, 1000)
         print('equipamento 1 - geração concluída')
-        generate_data.generate_data_equipaments(2, 20)
+
+        generate_data.generate_data_equipaments(2, 1000)
+        generate_data_maintenance.generate_data_maintenances(2, 1000)
         print('equipamento 2 - geração concluída')
-        logging.info("Dados inseridos com sucesso no MongoDB.")
+
     except Exception as e:
-        logging.error(e)
+        logger.error(f'Erro ao executar o processo de Geração de dados: {e}')
+    finally:
+        logger.info('Processo de Geração de Dados concluído.')
+
 
 if __name__ == '__main__':
+    logging_data()
     etl_process = IoTDataGenerator()
-    generate_iot_data()
-
+    generate_data_process()
