@@ -1,24 +1,52 @@
-import logging
 import os
+import logging
+import logging.config
 
 
-def setup_logging():
-    # Cria o diretório de logs se não existir
-    log_directory = 'logs'
-    if not os.path.exists(log_directory):
-        os.makedirs(log_directory)
+def logging_data(log_dir='logs', log_file_name='process-etl.log'):
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
 
-    # Define o formato do log
-    log_format = "%(asctime)s - %(levelname)s - %(message)s"
-    logging.basicConfig(
-        filename=os.path.join(log_directory, 'etl_project.log'),  # Nome do arquivo de log
-        filemode='a',  # 'a' para adicionar, 'w' para sobrescrever
-        level=logging.INFO,  # Define o nível do log
-        format=log_format,
-    )
+    log_file_path = os.path.join(log_dir, log_file_name)
 
-    # Adiciona também um handler para console
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)  # Mantenha o nível do console
-    console_handler.setFormatter(logging.Formatter(log_format))
-    logging.getLogger().addHandler(console_handler)
+    # Configuração de logging
+    LOGGING_CONFIG = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'file': {
+                'level': 'INFO',
+                'class': 'logging.handlers.RotatingFileHandler',
+                'filename': log_file_path,
+                'maxBytes': 1024 * 1024 * 5,
+                'backupCount': 5,
+                'formatter': 'verbose',
+                'encoding': 'utf-8',
+            },
+            'console': {
+                'level': 'INFO',
+                'class': 'logging.StreamHandler',
+                'formatter': 'verbose',
+            },
+        },
+        'loggers': {
+            'process-etl': {
+                'handlers': ['file', 'console'],
+                'level': 'INFO',
+                'propagate': False,
+            },
+        },
+        'root': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+        },
+        'formatters': {
+            'verbose': {
+                'format': '{levelname} -> {asctime} {module} : {message}',
+                'style': '{',
+            },
+        },
+    }
+
+    # Aplica a configuração de logging
+    logging.config.dictConfig(LOGGING_CONFIG)
