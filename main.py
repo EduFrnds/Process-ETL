@@ -2,10 +2,6 @@ import logging
 
 from etl.generate_data import EquipmentProductionDataGenerator, EquipmentMaintenanceDataGenerator
 from etl.layer_bronze.bronze import LoadToBronze
-
-
-import logging
-
 from log_config import logging_data
 
 
@@ -21,7 +17,7 @@ def create_data_csv():
         'operation_status'
     ]
     maintenance_headers = [
-        'equipment_id', 'maintenance_type', 'hours_maintenance'
+                'equipment_id', 'maintenance_type', 'hours_maintenance'
     ]
 
     logger = logging.getLogger('process-etl')
@@ -41,12 +37,20 @@ def create_data_csv():
         logger.error(f'Erro ao gerar dados: {e}')
 
 
+def upload_layer_bronze():
+    """
+    Upload data to layer bronze.
+    """
+    load_to_bronze = LoadToBronze(
+        'data',
+        'maintenances',
+        'postgresql://postgres:postgres@localhost:5432/postgres'
+    )
+
+
 if __name__ == '__main__':
     logging_data()
     create_data_csv()
     print("CSV generation complete!")
-    # load_to_bronze = LoadToBronze(
-    #     'data',
-    #     'maintenance_equipaments',
-    #     'postgresql://postgres:postgres@localhost:5432/postgres'
-    # )
+    upload_layer_bronze()
+    print("Data uploaded to layer bronze!")

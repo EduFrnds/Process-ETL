@@ -54,8 +54,3 @@ class Connection(Config):
     def query(self, sql, params=None):
         self.cursor.execute(sql, params or ())
         return self.fetchall()
-
-
-if __name__ == '__main__':
-    conexao = pdb.connect
-    print(f"{conexao}")
