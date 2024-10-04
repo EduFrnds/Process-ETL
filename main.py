@@ -1,34 +1,56 @@
 import logging
 
+from etl.generate_data import EquipmentProductionDataGenerator, EquipmentMaintenanceDataGenerator
+from etl.layer_bronze.bronze import LoadToBronze
 from log_config import logging_data
 
-from etl.generate_data import IoTDataGenerator, EquipmentMaintenanceDataGenerator
 
-
-def generate_data_process():
-    # 1. Geração de dados (Parquet)
-    generate_data = IoTDataGenerator()
+def create_data_csv():
+    """
+    Genarate data for equipaments and maintenances and save them in CSV files.
+    """
+    generate_data_equipment = EquipmentProductionDataGenerator()
     generate_data_maintenance = EquipmentMaintenanceDataGenerator()
 
-    logger = logging.getLogger('process-etl')  # Obtém o logger que configuramos
+    equipment_headers = [
+        'equipment_id', 'production', 'timestamp', 'temperature', 'pressure', 'speed', 'vibration_level',
+        'operation_status'
+    ]
+    maintenance_headers = [
+                'equipment_id', 'maintenance_type', 'hours_maintenance'
+    ]
+
+    logger = logging.getLogger('process-etl')
     logger.info('Iniciando o processo de Geração de Dados...')
 
+    RECORDS_TO_GENERATE = 1000
+
     try:
-        generate_data.generate_data_equipaments(1, 1000)
-        generate_data_maintenance.generate_data_maintenances(1, 1000)
-        print('equipamento 1 - geração concluída')
-
-        generate_data.generate_data_equipaments(2, 1000)
-        generate_data_maintenance.generate_data_maintenances(2, 1000)
-        print('equipamento 2 - geração concluída')
-
-    except Exception as e:
-        logger.error(f'Erro ao executar o processo de Geração de dados: {e}')
-    finally:
+        generate_data_equipment.generate_data_equipments(
+            RECORDS_TO_GENERATE, equipment_headers
+        )
+        generate_data_maintenance.generate_data_maintenances(
+            RECORDS_TO_GENERATE, maintenance_headers
+        )
         logger.info('Processo de Geração de Dados concluído.')
+    except Exception as e:
+        logger.error(f'Erro ao gerar dados: {e}')
+
+
+def upload_layer_bronze():
+    """
+    Upload data to layer bronze.
+    """
+    load_to_bronze = LoadToBronze(
+        'data',
+        'maintenances',
+        'postgresql://postgres:postgres@localhost:5432/postgres'
+    )
 
 
 if __name__ == '__main__':
     logging_data()
-    etl_process = IoTDataGenerator()
-    generate_data_process()
+    create_data_csv()
+    print("CSV generation complete!")
+    upload_layer_bronze()
+    print("Data uploaded to layer bronze!")
