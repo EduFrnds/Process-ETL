@@ -5,15 +5,15 @@ import psycopg2 as pdb
 
 class Config:
     def __init__(self):
-        pass
-
-    conexao = pdb.connect(
-        database=os.getenv("POSTGRES_DB_NAME", default="postgres"),
-        user=os.getenv("POSTGRES_DB_USER", default="postgres"),
-        password=os.getenv("POSTGRES_DB_PASS", default="sql123"),
-        host=os.getenv("POSTGRES_DB_HOST", default="localhost"),
-        port=os.getenv("POSTGRES_DB_PORT", default="5432"),
-    )
+        self.config = {
+            "postgres": {
+                "database": os.getenv("POSTGRES_DB_NAME", default="project_etl"),
+                "user": os.getenv("POSTGRES_DB_USER", default="postgres"),
+                "password": os.getenv("POSTGRES_DB_PASS", default="sql12345"),
+                "host": os.getenv("POSTGRES_DB_HOST", default="localhost"),
+                "port": os.getenv("POSTGRES_DB_PORT", default="5432"),
+            }
+        }
 
 
 class Connection(Config):
@@ -22,7 +22,7 @@ class Connection(Config):
         try:
             self.conn = pdb.connect(**self.config['postgres'])
             self.cur = self.conn.cursor()
-
+            print("Conexão estabelecida com sucesso.")
         except Exception as e:
             print("Erro na conexão", e)
             exit()

@@ -1,28 +1,39 @@
-import os
+import csv
 
-import pandas as pd
-from sqlalchemy import create_engine
-from db_config import Config
+from db_config import Connection
 
 
-class LoadToBronze(Config):
-    def __init__(self, csv_file_path, table_name, db_url):
+class LoadToBronze(Connection):
+    def __init__(self):
         super().__init__()
 
-        self.csv_file_path = "./data"
-        self.table_name = table_name
-        self.db_url = db_url
-
-    def load_to_bronze(self, file_name):
-
+    def insert_layer_bronze(self, *args):
         try:
-            full_path = os.path.join(self.csv_file_path)
-
-            if not os.path.exists(full_path):
-                raise FileNotFoundError(f"Arquivo não encontrado: {full_path}")
-
-            data_csv = pd.read_parquet(f"{self.csv_file_path}/{file_name}")
-            for row in data_csv:
-                print(row)
+            sql = ("INSERT INTO layer_bronze.table_bronze"
+                   "(equipment_id, production, timestamp, temperature, "
+                   "pressure, speed, vibration_level, maintenance_type, hours_maintenance)"
+                   "values (%s, %s, %s, %s, %s, %s, %s, %s, %s)")
+            self.execute(sql, args)
+            self.commit()
         except Exception as e:
-            print("Erro ao inserir dados na tabela", e)
+            print("Erro ao inserir", e)
+
+    def insert_csv(self, filename):
+        try:
+            data = csv.DictReader(open(filename, encoding='utf-8'))
+            for row in data:
+                # Convertendo os dados para os tipos corretos, se necessário
+                equipment_id = int(row['equipment_id'])
+                production = float(row['production'])
+                timestamp = row['timestamp']
+                temperature = float(row['temperature'])
+                pressure = float(row['pressure'])
+                speed = float(row['speed'])
+                vibration_level = float(row['vibration_level'])
+                maintenance_type = row['maintenance_type']
+                hours_maintenance = float(row['hours_maintenance'])
+
+                self.insert_layer_bronze(equipment_id, production, timestamp, temperature, pressure, speed,
+                                         vibration_level, maintenance_type, hours_maintenance)
+        except Exception as e:
+            print("Erro ao inserir", e)
