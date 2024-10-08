@@ -1,5 +1,7 @@
+import csv
 import logging
 
+from db_config import Connection
 from etl.generate_data import EquipmentProductionDataGenerator, EquipmentMaintenanceDataGenerator
 from etl.layer_bronze.bronze import LoadToBronze
 from log_config import logging_data
@@ -17,13 +19,13 @@ def create_data_csv():
         'operation_status'
     ]
     maintenance_headers = [
-                'equipment_id', 'maintenance_type', 'hours_maintenance'
+        'equipment_id', 'maintenance_type', 'hours_maintenance'
     ]
 
     logger = logging.getLogger('process-etl')
     logger.info('Iniciando o processo de Geração de Dados...')
 
-    RECORDS_TO_GENERATE = 1000
+    RECORDS_TO_GENERATE = 10
 
     try:
         generate_data_equipment.generate_data_equipments(
@@ -37,20 +39,20 @@ def create_data_csv():
         logger.error(f'Erro ao gerar dados: {e}')
 
 
-def upload_layer_bronze():
-    """
-    Upload data to layer bronze.
-    """
-    load_to_bronze = LoadToBronze(
-        'data',
-        'maintenances',
-        'postgresql://postgres:postgres@localhost:5432/postgres'
-    )
+def insert_csv():
+    logger = logging.getLogger('process-etl')
+    logger.info('Iniciando o processo de Inserção de Dados...')
+    try:
+        conn = LoadToBronze()
+        conn.insert_csv('data/maintenances.csv')
+        conn.insert_csv('data/equipments.csv')
+        logger.info('Processo de Inserção de Dados concluído.')
+    except Exception as e:
+        logger.error(f'Erro ao inserir dados: {e}')
 
 
 if __name__ == '__main__':
     logging_data()
-    create_data_csv()
-    print("CSV generation complete!")
-    upload_layer_bronze()
-    print("Data uploaded to layer bronze!")
+    insert_csv()
+    # create_data_csv()
+

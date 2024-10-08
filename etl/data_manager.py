@@ -3,7 +3,7 @@ import csv
 
 class DataManager:
     def __init__(self, file_path):
-        self.file_path = './data'
+        self.file_path = '../data'
         self.path = file_path
 
     def save_to_csv(self, data, filename, headers):
