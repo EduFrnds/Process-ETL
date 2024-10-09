@@ -15,7 +15,7 @@ def create_data_csv():
     generate_data_maintenance = EquipmentMaintenanceDataGenerator()
 
     equipment_headers = [
-        'equipment_id', 'production', 'timestamp', 'temperature', 'pressure', 'speed', 'vibration_level',
+        'equipment_id', 'production', 'hours_production', 'temperature', 'pressure', 'speed', 'vibration_level',
         'operation_status'
     ]
     maintenance_headers = [
@@ -25,7 +25,7 @@ def create_data_csv():
     logger = logging.getLogger('process-etl')
     logger.info('Iniciando o processo de Geração de Dados...')
 
-    RECORDS_TO_GENERATE = 10
+    RECORDS_TO_GENERATE = 1000
 
     try:
         generate_data_equipment.generate_data_equipments(
@@ -41,11 +41,11 @@ def create_data_csv():
 
 def insert_csv():
     logger = logging.getLogger('process-etl')
-    logger.info('Iniciando o processo de Inserção de Dados...')
+    logger.info('Iniciando o processo de Inserção de Dados.')
     try:
         conn = LoadToBronze()
-        conn.insert_csv('data/maintenances.csv')
         conn.insert_csv('data/equipments.csv')
+        conn.insert_csv('data/maintenances.csv')
         logger.info('Processo de Inserção de Dados concluído.')
     except Exception as e:
         logger.error(f'Erro ao inserir dados: {e}')
@@ -53,6 +53,5 @@ def insert_csv():
 
 if __name__ == '__main__':
     logging_data()
-    insert_csv()
-    # create_data_csv()
-
+    # create_data_csv() # Cria os arquivos CSV
+    insert_csv()    # Insere os arquivos CSV
