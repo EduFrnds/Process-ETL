@@ -1,3 +1,4 @@
+import datetime
 import random
 from faker import Faker
 
@@ -16,13 +17,18 @@ class EquipmentProductionDataGenerator(BaseDataGenerator):
 
     def generate_data_equipments(self, r, headers):  # r=records
         """Generate data for equipaments"""
+
+        start_date = datetime.datetime.now() - datetime.timedelta(days=365)
+        end_date = datetime.datetime.now()
+
         equipment_data = []
 
         for _ in range(r):
             data = {
                 "equipment_id": random.choice(["1", "2", "3"]),
                 "production": round(random.uniform(300.0, 500.0), 2),  # Produção entre 300 e 500 kg/h
-                "timestamp": self.fake.date_time_between(start_date='-1d', end_date='now'),
+                "hours_production": self.fake.date_time_between(start_date=start_date, end_date=end_date),
+                # "hours_production": self.fake.date_time_between(start_date='-1d', end_date='now'),
                 "temperature": round(random.uniform(150.0, 250.0), 2),  # Temperatura entre 150°C e 250°C
                 "pressure": round(random.uniform(100.0, 300.0), 2),  # Pressão entre 100 e 300 PSI
                 "speed": round(random.uniform(50.0, 120.0), 2),  # Velocidade entre 50 e 120 RPM
