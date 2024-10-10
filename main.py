@@ -1,7 +1,6 @@
-import csv
 import logging
 
-from db_config import Connection
+from etl.data_manager import DataManager
 from etl.generate_data import EquipmentProductionDataGenerator, EquipmentMaintenanceDataGenerator
 from etl.layer_bronze.bronze import LoadToBronze
 from log_config import logging_data
@@ -23,7 +22,7 @@ def create_data_csv():
     ]
 
     logger = logging.getLogger('process-etl')
-    logger.info('Iniciando o processo de Geração de Dados...')
+    logger.info('Iniciando o processo de Geração de Dados.')
 
     RECORDS_TO_GENERATE = 1000
 
@@ -53,5 +52,6 @@ def insert_csv():
 
 if __name__ == '__main__':
     logging_data()
-    # create_data_csv() # Cria os arquivos CSV
-    insert_csv()    # Insere os arquivos CSV
+    create_data_csv()
+    insert_csv()
+    DataManager.delete_files('./data')

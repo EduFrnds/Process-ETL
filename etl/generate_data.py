@@ -15,7 +15,7 @@ class EquipmentProductionDataGenerator(BaseDataGenerator):
     def __init__(self):
         super().__init__('./data')
 
-    def generate_data_equipments(self, r, headers):  # r=records
+    def generate_data_equipments(self, r, headers):
         """Generate data for equipaments"""
 
         start_date = datetime.datetime.now() - datetime.timedelta(days=365)
@@ -26,14 +26,13 @@ class EquipmentProductionDataGenerator(BaseDataGenerator):
         for _ in range(r):
             data = {
                 "equipment_id": random.choice(["1", "2", "3"]),
-                "production": round(random.uniform(300.0, 500.0), 2),  # Produção entre 300 e 500 kg/h
+                "production": round(random.uniform(300.0, 500.0), 2),
                 "hours_production": self.fake.date_time_between(start_date=start_date, end_date=end_date),
-                # "hours_production": self.fake.date_time_between(start_date='-1d', end_date='now'),
-                "temperature": round(random.uniform(150.0, 250.0), 2),  # Temperatura entre 150°C e 250°C
-                "pressure": round(random.uniform(100.0, 300.0), 2),  # Pressão entre 100 e 300 PSI
-                "speed": round(random.uniform(50.0, 120.0), 2),  # Velocidade entre 50 e 120 RPM
-                "vibration_level": round(random.uniform(0.1, 5.0), 2),  # Nível de vibração entre 0.1 e 5.0 mm/s
-                "operation_status": random.choice(["ON", "OFF"])  # Equipamento ligado/desligado
+                "temperature": round(random.uniform(150.0, 250.0), 2),
+                "pressure": round(random.uniform(100.0, 300.0), 2),
+                "speed": round(random.uniform(50.0, 120.0), 2),
+                "vibration_level": round(random.uniform(0.1, 5.0), 2),
+                "operation_status": random.choice(["ON", "OFF"])
             }
             equipment_data.append(data)
 
@@ -50,7 +49,7 @@ class EquipmentMaintenanceDataGenerator(BaseDataGenerator):
         maintenance_data = []
 
         for _ in range(r):
-            hours_worked = random.uniform(50, 200)  # Exemplo: entre 50 e 200 horas
+            hours_worked = random.uniform(50, 200)
 
             maintenance_data.append({
                 "equipment_id": random.choice(["1", "2", "3"]),

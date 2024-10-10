@@ -1,4 +1,6 @@
 import csv
+import logging
+import os
 
 
 class DataManager:
@@ -13,3 +15,16 @@ class DataManager:
             writer = csv.DictWriter(csvFile, fieldnames=headers)
             writer.writeheader()
             writer.writerows(data)
+
+    @staticmethod
+    def delete_files(directory_path):
+        """Delete all files in the specified directory."""
+        try:
+            files = os.listdir(directory_path)
+            for file in files:
+                file_path = os.path.join(directory_path, file)
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+            logging.info('Todos os arquivos foram excluídos do diretório.')
+        except Exception as e:
+            logging.error(f"Erro ao excluir arquivos: {e}")
