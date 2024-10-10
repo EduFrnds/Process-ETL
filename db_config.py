@@ -1,3 +1,4 @@
+import logging
 import os
 
 import psycopg2 as pdb
@@ -22,9 +23,9 @@ class Connection(Config):
         try:
             self.conn = pdb.connect(**self.config['postgres'])
             self.cur = self.conn.cursor()
-            print("Conexão estabelecida com sucesso.")
+            logging.info("Conexão estabelecida com sucesso")
         except Exception as e:
-            print("Erro na conexão", e)
+            logging.error(f"Erro ao conectar: {e}")
             exit()
 
     def __enter__(self):

@@ -1,4 +1,5 @@
 import csv
+import logging
 
 from db_config import Connection
 
@@ -8,15 +9,13 @@ class LoadToBronze(Connection):
         super().__init__()
 
     def insert_layer_bronze(self, *args):
-        try:
-            sql = ("INSERT INTO layer_bronze.layer_bronze"
-                   "(equipment_id, production, hours_production, temperature, "
-                   "pressure, speed, vibration_level, maintenance_type, hours_maintenance)"
-                   "values (%s, %s, %s, %s, %s, %s, %s, %s, %s)")
-            self.execute(sql, args)
-            self.commit()
-        except Exception as e:
-            print("Erro ao inserir", e)
+
+        sql = ("INSERT INTO layer_bronze.layer_bronze"
+               "(equipment_id, production, hours_production, temperature, "
+               "pressure, speed, vibration_level, maintenance_type, hours_maintenance)"
+               "values (%s, %s, %s, %s, %s, %s, %s, %s, %s)")
+        self.execute(sql, args)
+        self.commit()
 
     def insert_csv(self, filename):
         try:
@@ -37,4 +36,4 @@ class LoadToBronze(Connection):
                 self.insert_layer_bronze(equipment_id, production, hours_production, temperature, pressure, speed,
                                          vibration_level, maintenance_type, hours_maintenance)
         except Exception as e:
-            print("Erro ao inserir", e)
+            logging.error(f"Erro ao inserir dados: {e}")
