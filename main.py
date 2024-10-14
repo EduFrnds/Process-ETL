@@ -43,8 +43,8 @@ def insert_csv():
 
 if __name__ == '__main__':
     logging_data()
-    # create_data_csv()
-    # insert_csv()
-    # DataManager.delete_files('./data')
+    create_data_csv()
+    insert_csv()
+    DataManager.delete_files('./data')
     read = ReadData()
     read.read_layer_bronze('layer_bronze')

@@ -24,15 +24,16 @@ class EquipmentProductionDataGenerator(BaseDataGenerator):
         equipment_data = []
 
         for _ in range(r):
-            hours_worked = random.uniform(50, 200)
+            hours_worked = random.uniform(1, 8)
+
             data = {
                 "equipment_id": random.choice(["1", "2", "3"]),
-                "production": round(random.uniform(300.0, 500.0), 2),
+                "production": round(random.uniform(0.0, 350.0), 2),
                 "hours_production": self.fake.date_time_between(start_date=start_date, end_date=end_date),
-                "temperature": round(random.uniform(150.0, 250.0), 2),
-                "pressure": round(random.uniform(100.0, 300.0), 2),
-                "speed": round(random.uniform(50.0, 120.0), 2),
-                "vibration_level": round(random.uniform(0.1, 5.0), 2),
+                "temperature": round(random.uniform(180.0, 250.0), 2),
+                "pressure": round(random.uniform(0.5, 3.0), 2),
+                "speed": round(random.uniform(0.5, 120.0), 2),
+                "vibration_level": round(random.uniform(0.1, 2.0), 2),
                 "operation_status": random.choice(["ON", "OFF"]),
                 "maintenance_type": random.choice(["Repair", "Maintenance"]),
                 "hours_maintenance": round(hours_worked, 2),
