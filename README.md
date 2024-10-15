@@ -36,6 +36,41 @@ Resumindo, é uma abordagem de manter uma arquitetura simples no início, com um
 Isso cria um caminho natural de evolução, sem forçar grandes mudanças ou custos logo de início.
 
 ## Índice
+```
+process-etl/
+│
+├── .venv/                   # Ambiente virtual do Python
+│   ├── etc/
+│   ├── include/
+│   ├── Lib/
+│   ├── Scripts/
+│   └── share/
+│
+├── data/                    # Pasta para armazenar dados processados
+│   └── silver_data.csv       # Arquivo CSV da camada Silver
+│
+├── etl/                     # Módulo ETL
+│   ├── layer_bronze/         # Camada Bronze
+│   │   └── load.py
+│   ├── layer_gold/           # Camada Gold (Ainda não preenchida)
+│   ├── layer_silver/         # Camada Silver
+│   │   ├── __init__.py
+│   │   ├── data_manager.py
+│   │   └── generate_data.py
+│
+├── logs/                    # Diretório de logs
+│   └── process-etl.log       # Arquivo de log
+│
+├── .env                     # Arquivo de variáveis de ambiente
+├── .gitignore               # Arquivo Git para ignorar arquivos e pastas
+├── db_config.py             # Arquivo de configuração de banco de dados
+├── log_config.py            # Arquivo de configuração de logging
+├── main.py                  # Arquivo principal para execução do projeto
+├── README.md                # Documentação do projeto
+└── requirements.txt         # Dependências do projeto
+```
+
+
 - [Visão Geral do Projeto](#project-overview): Projeto conta com uma abordagem direta do livro "Fundamentos de Engenharia de dados" e tem como objetivo a construção de um projeto que contempla o ciclo de vida da engenharia de dados.
     Conforme imagem acima, crio "steps" para explicar cada processo ao longo da execução do projeto. Caso queira acompanhar as próxima atividades segue o quadro no trello: [https://trello.com/invite/b/66fa9775f0a5daeab37ceb97/ATTI67ad7fa8d10b196ae269aeb34fcfcd491EFF7D41/engenharia-de-dados](https://trello.com/b/xe0uwXOb)
   
