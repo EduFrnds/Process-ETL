@@ -46,6 +46,9 @@ class Connection(Config):
     def commit(self):
         self.connection.commit()
 
+    def rollback(self):
+        self.connection.rollback()
+
     def fetchall(self):
         return self.cursor.fetchall()
 

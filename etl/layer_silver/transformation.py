@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 
 from etl.layer_silver.read import ReadData
@@ -11,8 +13,8 @@ class DataTransformation(ReadData):
     def clean_data(self):
         df_clean = self.df.copy()
         df_clean = df_clean.dropna(subset=['production', 'hours_production', 'temperature',
-                                               'operation_status', 'maintenance_type', 'hours_maintenance',
-                                               'pressure', 'speed', 'vibration_level'])
+                                           'operation_status', 'maintenance_type', 'hours_maintenance',
+                                           'pressure', 'speed', 'vibration_level'])
         return df_clean
 
     # def normalize_data(self, df):
@@ -26,7 +28,6 @@ class DataTransformation(ReadData):
     #     return df
     @staticmethod
     def aggregate_data(df_clean):
-
         df_clean['hours_production'] = pd.to_datetime(df_clean['hours_production'])
 
         df_clean['month'] = df_clean['hours_production'].dt.month
@@ -38,26 +39,76 @@ class DataTransformation(ReadData):
 
     @staticmethod
     def filter_data(df_grouped):
-        """Filtra os dados para manter apenas horas de produção <= 8 horas."""
-
-        # Converter a coluna 'hours_production' para o tipo datetime, se necessário
+        # Converter a colunas
         df_grouped['hours_production'] = pd.to_datetime(df_grouped['hours_production'], errors='coerce')
+        df_grouped['maintenance_minutes'] = (df_grouped['hours_maintenance'] * 60).round(2)
 
         # Extrair apenas as horas como fração (horas + minutos/60) diretamente de 'hours_production'
         df_grouped['hours_only'] = (
-                    df_grouped['hours_production'].dt.hour + df_grouped['hours_production'].dt.minute / 60
+                df_grouped['hours_production'].dt.hour + df_grouped['hours_production'].dt.minute / 60
         ).round(2)
+
+        df_grouped['production_minutes'] = (df_grouped['hours_only'] * 60).round(2)
+
         # Filtrar os registros onde a produção seja <= 8 horas
         df_filtered = df_grouped[df_grouped['hours_only'] < 8]
 
+        # Remover as colunas
+        df_filtered = df_filtered.drop(
+            columns=[
+                'hours_production',
+                'speed',
+                'operation_status',
+                'hours_maintenance',
+                'hours_only',
+            ]
+        )
+
+        # Alterar o nome de colunas
+        df_filtered = df_filtered.rename(columns={'minutes_maintenance': 'hours_maintenance'})
+
         return df_filtered
 
+    @staticmethod
+    def derive_data(df_filtered):
+        # Calcular a média das colunas temperature e vibration_level.
+        df_filtered['temperature_mean'] = (
+            df_filtered.groupby('equipment_id')['temperature'].transform('mean')
+        ).round(2)
+        df_filtered['vibration_level_mean'] = (
+            df_filtered.groupby('equipment_id')['vibration_level'].transform('mean')
+        ).round(2)
 
-if __name__ == '__main__':
-    bronze_table_name = 'bronze_data'
-    data_transformation = DataTransformation(bronze_table_name)
-    df_cleaned = data_transformation.clean_data()
-    df_aggregated = DataTransformation.aggregate_data(df_cleaned)
-    df_filt = DataTransformation.filter_data(df_aggregated)
-    df_filt.to_csv('silver_data.csv', index=False)
-    print(df_filt)
+        # Calcular o desvio padrão das colunas temperature e vibration_level.
+        df_filtered['temperature_std'] = (
+            df_filtered.groupby('equipment_id')['temperature'].transform('std')
+        ).round(2)
+        df_filtered['vibration_level_std'] = (
+            df_filtered.groupby('equipment_id')['vibration_level'].transform('std')
+        ).round(2)
+
+        # Calcular o LSC e LSI para temperature.
+        df_filtered['temperature_lsc'] = (
+                df_filtered['temperature_mean'] + 3 * df_filtered['temperature_std']
+        ).round(2)
+        df_filtered['temperature_lsi'] = (
+                df_filtered['temperature_mean'] - 3 * df_filtered['temperature_std']
+        ).round(2)
+
+        # Calcular o LSC e LSI para vibration_level.
+        df_filtered['vibration_level_lsc'] = (
+                df_filtered['vibration_level_mean'] + 3 * df_filtered['vibration_level_std']
+        ).round(2)
+        df_filtered['vibration_level_lsi'] = (
+                df_filtered['vibration_level_mean'] - 3 * df_filtered['vibration_level_std']
+        ).round(2)
+
+        df_filtered = df_filtered.drop(
+            columns=[
+                'temperature',
+                'pressure',
+                'vibration_level'
+            ]
+        )
+
+        return df_filtered
