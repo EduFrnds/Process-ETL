@@ -1,6 +1,7 @@
 # ED-DATA
 
 ![Projeto ETL](https://github.com/user-attachments/assets/89538873-b856-4886-9862-0c68afad3459)
+Arquitetura: v1
 
 ## Contexto PROJETO
 
