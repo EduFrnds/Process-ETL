@@ -23,10 +23,18 @@ class Connection(Config):
         try:
             self.conn = pdb.connect(**self.config['postgres'])
             self.cur = self.conn.cursor()
-            logging.info("Conexão estabelecida com sucesso")
         except Exception as e:
             logging.error(f"Erro ao conectar: {e}")
             exit()
+
+    def close(self):
+        try:
+            if self.conn:
+                self.cur.close()
+                self.conn.close()
+                logging.info("Conexão encerrada com sucesso")
+        except Exception as e:
+            logging.error(f"Erro ao encerrar a conexão: {e}")
 
     def __enter__(self):
         return self

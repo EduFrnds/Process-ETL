@@ -16,7 +16,6 @@ class EquipmentProductionDataGenerator(BaseDataGenerator):
         super().__init__('./data')
 
     def generate_data_equipments(self, r, headers):
-        """Generate data for equipaments"""
 
         start_date = datetime.datetime.now() - datetime.timedelta(days=365)
         end_date = datetime.datetime.now()
