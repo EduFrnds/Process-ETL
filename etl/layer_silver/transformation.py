@@ -1,14 +1,14 @@
-import os
-
 import pandas as pd
 
-from etl.layer_silver.read import ReadData
+from etl.data_manager import DataManager
+from etl.layer_silver.read import ReadDataBronze
 
 
-class DataTransformation(ReadData):
-    def __init__(self, table_name):
+class DataTransformationSilver(ReadDataBronze):
+    def __init__(self, table_name, data_path):
         super().__init__()
         self.df = self.read_layer_bronze(table_name)
+        self.data_manager = DataManager(data_path)
 
     def clean_data(self):
         df_clean = self.df.copy()
@@ -17,15 +17,6 @@ class DataTransformation(ReadData):
                                            'pressure', 'speed', 'vibration_level'])
         return df_clean
 
-    # def normalize_data(self, df):
-    #     """Método para normalização de colunas numéricas."""
-    #     df['temperature_normalized'] = (df['temperature'] - df['temperature'].min()) / (
-    #             df['temperature'].max() - df['temperature'].min()
-    #     )
-    #     df['pressure_normalized'] = (df['pressure'] - df['pressure'].min()) / (
-    #             df['pressure'].max() - df['pressure'].min()
-    #     )
-    #     return df
     @staticmethod
     def aggregate_data(df_clean):
         df_clean['hours_production'] = pd.to_datetime(df_clean['hours_production'])
@@ -63,14 +54,11 @@ class DataTransformation(ReadData):
                 'hours_only',
             ]
         )
-
-        # Alterar o nome de colunas
         df_filtered = df_filtered.rename(columns={'minutes_maintenance': 'hours_maintenance'})
 
         return df_filtered
 
-    @staticmethod
-    def derive_data(df_filtered):
+    def derive_data(self, df_filtered, headers):
         # Calcular a média das colunas temperature e vibration_level.
         df_filtered['temperature_mean'] = (
             df_filtered.groupby('equipment_id')['temperature'].transform('mean')
@@ -110,5 +98,5 @@ class DataTransformation(ReadData):
                 'vibration_level'
             ]
         )
-
+        self.data_manager.save_to_csv(df_filtered, 'silver_data', headers)
         return df_filtered

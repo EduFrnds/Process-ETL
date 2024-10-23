@@ -1,17 +1,17 @@
 import logging
-
 import pandas as pd
+
 from db_config import Connection
 
 
-class ReadDataBronze(Connection):
+class ReadDataSilver(Connection):
     def __init__(self):
         super().__init__()
 
-    def read_layer_bronze(self, table_name):
+    def read_layer_silver(self, table_name):
 
         try:
-            q = "SELECT * FROM layer_bronze.bronze_data"
+            q = "SELECT * FROM layer_silver.silver_data"
             self.cur.execute(q)
             data = self.cur.fetchall()
             col_names = [desc[0] for desc in self.cur.description]
@@ -22,3 +22,5 @@ class ReadDataBronze(Connection):
         except Exception as e:
             logging.error(f"Erro ao ler dados: {e}")
             exit()
+
+
