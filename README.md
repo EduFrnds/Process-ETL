@@ -48,14 +48,19 @@ process-etl/
 │   ├── Scripts/
 │   └── share/
 │
-├── data/                    # Pasta para armazenar dados processados
-│   └── silver_data.csv       # Arquivo CSV da camada Silver
+├── data/                    # Pasta para armazenar dados processados│          
 │
 ├── etl/                     # Módulo ETL
 │   ├── layer_bronze/         # Camada Bronze
 │   │   └── load.py
-│   ├── layer_gold/           # Camada Gold (Ainda não preenchida)
-│   ├── layer_silver/         # Camada Silver
+│   ├── layer_gold/
+        └── read.py           # Camada Gold
+        └── transformation.py
+        └── upload.py
+│   ├── layer_silver/
+        └── read.py           # Camada Silver
+        └── transformation.py
+        └── upload.py
 │   │   ├── __init__.py
 │   │   ├── data_manager.py
 │   │   └── generate_data.py
