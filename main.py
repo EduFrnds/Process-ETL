@@ -8,7 +8,7 @@ from etl.layer_gold.transformation import DataTransformationGold
 from etl.layer_gold.upload import UploadToGold
 from etl.layer_silver.transformation import DataTransformationSilver
 from etl.layer_silver.upload import UploadToSilver
-from log_config import logging_data
+from logs.log_config import logging_data
 
 
 def create_data_csv():

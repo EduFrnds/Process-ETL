@@ -1,7 +1,7 @@
 import logging
 import pandas as pd
 
-from db_config import Connection
+from db_config.db_config import Connection
 
 
 class ReadDataSilver(Connection):
