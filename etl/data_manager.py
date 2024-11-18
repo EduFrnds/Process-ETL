@@ -4,7 +4,7 @@ import os
 
 import pandas as pd
 
-from db_config.db_config import Connection
+from db.db_config import Connection
 
 
 class DataManager:

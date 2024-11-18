@@ -13,7 +13,7 @@ class BaseDataGenerator:
 
 class EquipmentProductionDataGenerator(BaseDataGenerator):
     def __init__(self):
-        super().__init__('./data')
+        super().__init__('./data_test')
 
     def generate_data_equipments(self, r, headers):
 
