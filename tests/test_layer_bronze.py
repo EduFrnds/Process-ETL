@@ -2,7 +2,6 @@ from etl.layer_bronze.upload import UploadToBronze
 
 
 def test_generate_data(equipment_generator, tmp_path):
-
     # GIVEN
     r = 10
     headers = [
@@ -32,7 +31,6 @@ def test_generate_data(equipment_generator, tmp_path):
 
 
 def test_insert_layer_bronze(mock_data_bronze):
-
     # GIVEN
     bronze_uploader = UploadToBronze()
 
@@ -41,3 +39,5 @@ def test_insert_layer_bronze(mock_data_bronze):
 
     # THEN
     assert bronze_uploader.insert_layer_bronze, "Os dados não foram inseridos corretamente na camada bronze."
+
+    mock_data_bronze.assert_called()
