@@ -1,4 +1,5 @@
 import datetime
+import os
 import random
 from faker import Faker
 
@@ -12,8 +13,9 @@ class BaseDataGenerator:
 
 
 class EquipmentProductionDataGenerator(BaseDataGenerator):
-    def __init__(self):
-        super().__init__('./data_test')
+    def __init__(self, base_dir='./data'):
+        self.base_dir = base_dir
+        super().__init__(self.base_dir)
 
     def generate_data_equipments(self, r, headers):
 
