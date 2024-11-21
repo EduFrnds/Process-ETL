@@ -3,6 +3,8 @@ import os
 import random
 from faker import Faker
 
+import pandas as pd
+
 from etl.data_manager import DataManager
 
 
@@ -41,5 +43,7 @@ class EquipmentProductionDataGenerator(BaseDataGenerator):
             }
             equipment_data.append(data)
 
-        self.data_manager.save_to_csv(equipment_data, 'equipments', headers)
+        equipment_data = pd.DataFrame(equipment_data)
+        equipment_data.to_csv('./data/equipments.csv', index=False)
+
         return equipment_data
