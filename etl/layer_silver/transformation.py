@@ -36,7 +36,8 @@ class DataTransformationSilver(ReadDataBronze):
 
         # Extrair apenas as horas como fração (horas + minutos/60) diretamente de 'hours_production'
         df_grouped['hours_only'] = (
-                df_grouped['hours_production'].dt.hour + df_grouped['hours_production'].dt.minute / 60
+                df_grouped['hours_production'].dt.hour
+                + df_grouped['hours_production'].dt.minute / 60
         ).round(2)
 
         df_grouped['production_minutes'] = (df_grouped['hours_only'] * 60).round(2)
@@ -60,23 +61,31 @@ class DataTransformationSilver(ReadDataBronze):
 
     @staticmethod
     def derive_data(df_filtered, headers):
-        # Calcular a média das colunas temperature e vibration_level.
+        # Calcular a média das colunas temperature e vibration_level
         df_filtered['temperature_mean'] = (
-            df_filtered.groupby('equipment_id')['temperature'].transform('mean')
-        ).round(2)
+            df_filtered.groupby('equipment_id')['temperature']
+            .transform('mean')
+            .round(2)
+        )
         df_filtered['vibration_level_mean'] = (
-            df_filtered.groupby('equipment_id')['vibration_level'].transform('mean')
-        ).round(2)
+            df_filtered.groupby('equipment_id')['vibration_level']
+            .transform('mean')
+            .round(2)
+        )
 
-        # Calcular o desvio padrão das colunas temperature e vibration_level.
+        # Calcular o desvio padrão das colunas temperature e vibration_level
         df_filtered['temperature_std'] = (
-            df_filtered.groupby('equipment_id')['temperature'].transform('std')
-        ).round(2)
+            df_filtered.groupby('equipment_id')['temperature']
+            .transform('std')
+            .round(2)
+        )
         df_filtered['vibration_level_std'] = (
-            df_filtered.groupby('equipment_id')['vibration_level'].transform('std')
-        ).round(2)
+            df_filtered.groupby('equipment_id')['vibration_level']
+            .transform('std')
+            .round(2)
+        )
 
-        # Calcular o LSC e LSI para temperature.
+        # Calcular o LSC e LSI para temperature
         df_filtered['temperature_lsc'] = (
                 df_filtered['temperature_mean'] + 3 * df_filtered['temperature_std']
         ).round(2)
@@ -84,7 +93,7 @@ class DataTransformationSilver(ReadDataBronze):
                 df_filtered['temperature_mean'] - 3 * df_filtered['temperature_std']
         ).round(2)
 
-        # Calcular o LSC e LSI para vibration_level.
+        # Calcular o LSC e LSI para vibration_level
         df_filtered['vibration_level_lsc'] = (
                 df_filtered['vibration_level_mean'] + 3 * df_filtered['vibration_level_std']
         ).round(2)
@@ -92,14 +101,16 @@ class DataTransformationSilver(ReadDataBronze):
                 df_filtered['vibration_level_mean'] - 3 * df_filtered['vibration_level_std']
         ).round(2)
 
+        # Remover colunas desnecessárias
         df_filtered = df_filtered.drop(
             columns=[
                 'temperature',
                 'pressure',
-                'vibration_level'
+                'vibration_level',
             ]
         )
 
+        # Salvar os dados processados
         silver_data = pd.DataFrame(df_filtered)
         silver_data.to_csv('./data/silver_data.csv', index=False)
 

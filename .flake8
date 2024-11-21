@@ -1,0 +1,13 @@
+[flake8]
+# Limite de caracteres por linha (padrão: 79)
+max-line-length = 88
+
+# Ignorar erros específicos
+# E501: linha muito longa, W503: operador de quebra de linha , E126: identação incorreta
+ignore = E501,W503, E126
+
+# Diretórios ou arquivos a serem ignorados
+exclude = .git,__pycache__,env,.venv
+
+# Nível de complexidade permitido para funções
+max-complexity = 10

@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime
 
 from etl.data_manager import BaseLoader, DataManager
 from etl.generate_data import EquipmentProductionDataGenerator
@@ -72,8 +71,7 @@ def process_silver_layer():
         # end_time = datetime.now()
         # total_time = end_time - start_time
 
-        logging.info(f"Processo de transformação da camada Silver concluído com sucesso.\n")
-
+        logging.info("Processo de transformação da camada Silver concluído com sucesso.\n")
     except Exception as e:
         logging.error(f"Erro durante o processo de transformação: {e}")
 

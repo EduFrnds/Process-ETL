@@ -26,5 +26,3 @@ class UploadToSilver(BaseLoader):
         values = self.process_row(row, schema)
         columns = list(schema.keys())
         self.insert_data('layer_silver.silver_data', columns, values)
-
-

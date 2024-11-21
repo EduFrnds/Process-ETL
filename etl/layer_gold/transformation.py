@@ -19,4 +19,3 @@ class DataTransformationGold(ReadDataSilver):
         gold_data.to_csv('./data/gold_data.csv', index=False)
 
         return gold_data
-

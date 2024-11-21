@@ -2,8 +2,6 @@ import csv
 import logging
 import os
 
-import pandas as pd
-
 from db.db_config import Connection
 
 

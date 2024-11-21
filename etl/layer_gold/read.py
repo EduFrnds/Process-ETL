@@ -22,5 +22,3 @@ class ReadDataSilver(Connection):
         except Exception as e:
             logging.error(f"Erro ao ler dados: {e}")
             exit()
-
-

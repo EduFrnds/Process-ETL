@@ -21,4 +21,3 @@ class UploadToBronze(BaseLoader):
         values = self.process_row(row, schema)
         columns = list(schema.keys())
         self.insert_data('layer_bronze.bronze_data', columns, values)
-
