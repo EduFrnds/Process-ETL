@@ -10,9 +10,13 @@ class DataTransformationGold(ReadDataSilver):
         self.df = self.read_layer_silver(table_name)
         self.data_manager = DataManager(data_path)
 
-    def aggregate_data(self, df, headers):
+    @staticmethod
+    def aggregate_data(df, headers):
         df['describe_month'] = df['month'].apply(lambda x: pd.to_datetime(x, format='%m').strftime('%B'))
         df['target_production'] = 500
 
-        self.data_manager.save_to_csv(df, 'gold_data', headers)
-        return df
+        gold_data = pd.DataFrame(df)
+        gold_data.to_csv('./data/gold_data.csv', index=False)
+
+        return gold_data
+

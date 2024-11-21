@@ -12,17 +12,6 @@ class DataManager:
         self.file_path = '../data'
         self.path = file_path
 
-    def save_to_csv(self, data, filename, headers):
-        # Verificar se os dados são um DataFrame e converter para uma lista de dicionários
-        if isinstance(data, pd.DataFrame):
-            data = data.to_dict(orient='records')
-
-        file_path = f"{self.path}/{filename}.csv"
-        with open(file_path, 'wt', newline='', encoding='utf-8') as csvFile:
-            writer = csv.DictWriter(csvFile, fieldnames=headers)
-            writer.writeheader()
-            writer.writerows(data)
-
     @staticmethod
     def delete_files(directory_path):
         try:

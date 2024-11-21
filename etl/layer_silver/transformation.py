@@ -58,7 +58,8 @@ class DataTransformationSilver(ReadDataBronze):
 
         return df_filtered
 
-    def derive_data(self, df_filtered, headers):
+    @staticmethod
+    def derive_data(df_filtered, headers):
         # Calcular a média das colunas temperature e vibration_level.
         df_filtered['temperature_mean'] = (
             df_filtered.groupby('equipment_id')['temperature'].transform('mean')
@@ -98,5 +99,8 @@ class DataTransformationSilver(ReadDataBronze):
                 'vibration_level'
             ]
         )
-        self.data_manager.save_to_csv(df_filtered, 'silver_data', headers)
-        return df_filtered
+
+        silver_data = pd.DataFrame(df_filtered)
+        silver_data.to_csv('./data/silver_data.csv', index=False)
+
+        return silver_data
