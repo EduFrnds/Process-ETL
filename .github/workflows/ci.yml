@@ -31,6 +31,7 @@ jobs:
           pip install -r requirements.txt
           pip install flake8 pytest  # Adicionar ferramentas diretamente
           pip install psycopg2-binary
+          pip install pandas
 
       # Step 4: Rodar flake8
       - name: Run flake8
