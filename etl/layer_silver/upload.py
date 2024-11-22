@@ -21,7 +21,8 @@ class UploadToSilver(BaseLoader):
             'temperature_lsc': float,
             'temperature_lsi': float,
             'vibration_level_lsc': float,
-            'vibration_level_lsi': float
+            'vibration_level_lsi': float,
+            'temperature': float
         }
         values = self.process_row(row, schema)
         columns = list(schema.keys())

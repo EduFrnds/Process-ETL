@@ -23,7 +23,8 @@ class UploadToGold(BaseLoader):
             'vibration_level_lsc': float,
             'vibration_level_lsi': float,
             'describe_month': str,
-            'target_production': float
+            'target_production': float,
+            'temperature': float
         }
         values = self.process_row(row, schema)
         columns = list(schema.keys())
