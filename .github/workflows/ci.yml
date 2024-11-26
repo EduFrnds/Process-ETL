@@ -11,7 +11,22 @@ on:
 jobs:
   lint-and-test:
     name: Lint and Test
-    runs-on: windows-latest  # Use windows-latest se estiver usando Windows
+    runs-on: windows-latest  # Use Ubuntu por ser mais compatível com PostgreSQL
+
+    services:
+      postgres:
+        image: postgres:17  # Especifica a imagem do PostgreSQL
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: sql12345
+          POSTGRES_DB: project_etl
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
 
     steps:
       # Step 1: Fazer checkout do código
@@ -30,17 +45,27 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install flake8 pytest  # Adicionar ferramentas diretamente
-          pip install psycopg2-binary
-          pip install pandas
-          pip install faker
-          pip install flake8 pytest
+          pip install psycopg2-binary pandas faker
 
-      # Step 4: Rodar flake8
+      # Step 4: Configurar variáveis de ambiente do banco
+      - name: Set database environment variables
+        run: |
+          echo "DB_USER=postgres" >> $GITHUB_ENV
+          echo "DB_PASSWORD=sql12345" >> $GITHUB_ENV
+          echo "DB_NAME=test_db" >> $GITHUB_ENV
+          echo "DB_HOST=localhost" >> $GITHUB_ENV
+          echo "DB_PORT=5432" >> $GITHUB_ENV
+
+      # Step 5: Rodar flake8
       - name: Run flake8
         run: flake8 --config=.flake8 .
 
-      # Step 5: Rodar pytest
+      # Step 6: Rodar pytest
       - name: Run pytest
+        env:
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
         run: pytest --no-header -vv
-
-
