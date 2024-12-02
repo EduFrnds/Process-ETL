@@ -12,7 +12,7 @@ class DataTransformationSilver(ReadDataBronze):
 
     def clean_data(self):
         df_clean = self.df.copy()
-        df_clean = df_clean.dropna(subset=['production', 'hours_production', 'temperature',
+        df_clean = df_clean.dropna(subset=['production', 'hours_production',
                                            'operation_status', 'maintenance_type', 'hours_maintenance',
                                            'pressure', 'speed', 'vibration_level'])
         return df_clean
@@ -104,7 +104,6 @@ class DataTransformationSilver(ReadDataBronze):
         # Remover colunas desnecessárias
         df_filtered = df_filtered.drop(
             columns=[
-                'temperature',
                 'pressure',
                 'vibration_level',
             ]

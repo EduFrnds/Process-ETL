@@ -61,7 +61,7 @@ def process_silver_layer():
             'equipment_id', 'production', 'maintenance_type', 'month', 'year',
             'maintenance_minutes', 'production_minutes', 'temperature_mean',
             'vibration_level_mean', 'temperature_std', 'vibration_level_std',
-            'temperature_lsc', 'temperature_lsi', 'vibration_level_lsc', 'vibration_level_lsi'
+            'temperature_lsc', 'temperature_lsi', 'vibration_level_lsc', 'vibration_level_lsi', 'temperature'
         ]
         logging.info("Derivando dados e salvando na camada Silver.")
 
@@ -90,7 +90,7 @@ def process_silver_gold():
             'maintenance_minutes', 'production_minutes', 'temperature_mean',
             'vibration_level_mean', 'temperature_std', 'vibration_level_std',
             'temperature_lsc', 'temperature_lsi', 'vibration_level_lsc',
-            'vibration_level_lsi', 'describe_month', 'target_production'
+            'vibration_level_lsi', 'describe_month', 'target_production', 'temperature'
         ]
 
         # Derivando os dados e salvando na camada Gold

@@ -3,9 +3,8 @@ from db.db_config import Connection
 
 
 def test_connect_successful(mocker, db_config_mock):
-
     # GIVEN
-    mock_connect = mocker.patch('psycopg2.connect', return_value=MagicMock())
+    mock_connect = mocker.patch('db.db_config.pdb.connect', return_value=MagicMock())
     mock_connect.return_value.closed = 0
 
     # WHEN

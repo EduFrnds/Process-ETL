@@ -124,13 +124,14 @@ def test_derive_data():
     }
     headers = ['equipment_id', 'temperature_mean', 'vibration_level_mean',
                'temperature_std', 'vibration_level_std', 'temperature_lsc',
-               'temperature_lsi', 'vibration_level_lsc', 'vibration_level_lsi']
+               'temperature_lsi', 'vibration_level_lsc', 'vibration_level_lsi', 'temperature']
 
     df_input = pd.DataFrame(input_data)
 
     # Resultado esperado após as transformações
     expected_data = {
         'equipment_id': [1, 1, 2, 2],
+        'temperature': [220.0, 230.0, 240.0, 250.0],
         'temperature_mean': [225.0, 225.0, 245.0, 245.0],
         'vibration_level_mean': [0.55, 0.55, 0.75, 0.75],
         'temperature_std': [7.07, 7.07, 7.07, 7.07],
