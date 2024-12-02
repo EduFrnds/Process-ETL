@@ -48,9 +48,6 @@ class DataTransformationSilver(ReadDataBronze):
         # Remover as colunas
         df_filtered = df_filtered.drop(
             columns=[
-                'hours_production',
-                'speed',
-                'operation_status',
                 'hours_maintenance',
                 'hours_only',
             ]
@@ -100,14 +97,6 @@ class DataTransformationSilver(ReadDataBronze):
         df_filtered['vibration_level_lsi'] = (
                 df_filtered['vibration_level_mean'] - 3 * df_filtered['vibration_level_std']
         ).round(2)
-
-        # Remover colunas desnecessárias
-        df_filtered = df_filtered.drop(
-            columns=[
-                'pressure',
-                'vibration_level',
-            ]
-        )
 
         # Salvar os dados processados
         silver_data = pd.DataFrame(df_filtered)
