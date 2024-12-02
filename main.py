@@ -22,11 +22,9 @@ def create_data_csv():
     logger = logging.getLogger('process-etl')
     logger.info('Iniciando o Processo de Geração de Dados.')
 
-    RECORDS_TO_GENERATE = 10
-
     try:
         generate_data_equipment.generate_data_equipments(
-            RECORDS_TO_GENERATE, equipment_headers
+            1, equipment_headers, 2022, 2023
         )
         logger.info('Processo de Geração de Dados concluído. \n')
     except Exception as e:
@@ -58,10 +56,11 @@ def process_silver_layer():
 
         # Derivando os dados e salvando na camada Silver
         headers_silver_data = [
-            'equipment_id', 'production', 'maintenance_type', 'month', 'year',
+            'equipment_id', 'production', 'hours_production', 'maintenance_type'
             'maintenance_minutes', 'production_minutes', 'temperature_mean',
             'vibration_level_mean', 'temperature_std', 'vibration_level_std',
-            'temperature_lsc', 'temperature_lsi', 'vibration_level_lsc', 'vibration_level_lsi', 'temperature'
+            'temperature_lsc', 'temperature_lsi', 'vibration_level_lsc',
+            'vibration_level_lsi', 'temperature', 'pressure', 'vibration_level'
         ]
         logging.info("Derivando dados e salvando na camada Silver.")
 
@@ -76,7 +75,7 @@ def process_silver_layer():
         logging.error(f"Erro durante o processo de transformação: {e}")
 
 
-def process_silver_gold():
+def process_gold_layer():
     try:
         # Inicializa o processo de logging
         logging.info("Iniciando o processo de transformação da camada Gold.")
@@ -86,11 +85,11 @@ def process_silver_gold():
 
         # Definir os headers para a camada Gold
         headers_gold_data = [
-            'equipment_id', 'production', 'maintenance_type', 'month', 'year',
+            'equipment_id', 'production', 'hours_production', 'maintenance_type',
             'maintenance_minutes', 'production_minutes', 'temperature_mean',
             'vibration_level_mean', 'temperature_std', 'vibration_level_std',
             'temperature_lsc', 'temperature_lsi', 'vibration_level_lsc',
-            'vibration_level_lsi', 'describe_month', 'target_production', 'temperature'
+            'vibration_level_lsi', 'temperature', 'vibration_level', 'pressure'
         ]
 
         # Derivando os dados e salvando na camada Gold
@@ -115,7 +114,7 @@ if __name__ == '__main__':
     process_silver_layer()
     BaseLoader.load_csv_and_insert('data/silver_data.csv', UploadToSilver, 'insert_layer_silver')
 
-    process_silver_gold()
+    process_gold_layer()
     BaseLoader.load_csv_and_insert('data/gold_data.csv', UploadToGold, 'insert_layer_gold')
 
     # Deleta os arquivos gerados

@@ -9,9 +9,8 @@ class UploadToSilver(BaseLoader):
         schema = {
             'equipment_id': int,
             'production': float,
+            'hours_production': str,
             'maintenance_type': str,
-            'month': int,
-            'year': int,
             'maintenance_minutes': float,
             'production_minutes': float,
             'temperature_mean': float,
@@ -22,7 +21,9 @@ class UploadToSilver(BaseLoader):
             'temperature_lsi': float,
             'vibration_level_lsc': float,
             'vibration_level_lsi': float,
-            'temperature': float
+            'temperature': float,
+            'vibration_level': float,
+            'pressure': float
         }
         values = self.process_row(row, schema)
         columns = list(schema.keys())
