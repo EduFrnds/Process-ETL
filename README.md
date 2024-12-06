@@ -96,9 +96,15 @@ process-etl/
   - logging
   
 - [Instalação](#installation):  
-- [Usage](#usage) - Em construção
-- [Development](#development) - Em construção
-- [Testing](#testing) - Em construção
-- [Deployment](#deployment) - Em construção
-- [Contributing](#contributing) - Em construção
-- [License](#license) - Em construção
+- [Usage](#usage): Em construção
+- [Development](#development): Em construção
+- [Testing](#testing): Manualmente no terminal podem ser executador essas duas linhas de código:
+  
+  #### Executa os testes e aumenta a verbosidade, exibi nomes de testes individuais
+          pytest -v
+  #### Executa o flake8 no diretório atual, lendo as instruções de formatação, exclusões de erros, níveis de complexidade e outras diretivas do arquivo
+          flake8 --config=.flake8 .
+    
+- [Deployment](#deployment): Em construção
+- [Contributing](#contributing): Em construção
+- [License](#license): Em construção
