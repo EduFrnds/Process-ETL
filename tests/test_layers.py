@@ -8,29 +8,35 @@ from etl.layer_silver.read import ReadDataBronze
 from etl.layer_silver.transformation import DataTransformationSilver
 
 
-def test_generate_data():
+def test_generate_data(tmp_path):
     # GIVEN:
     generator = EquipmentProductionDataGenerator()
-    r = 10
     headers = [
         'equipment_id', 'production', 'hours_production', 'temperature',
         'pressure', 'speed', 'vibration_level', 'operation_status',
         'maintenance_type', 'hours_maintenance'
     ]
 
-    with patch('pandas.DataFrame.to_csv') as mock_to_csv:
-        # WHEN: O método de geração de dados é chamado
-        equipment_data = generator.generate_data_equipments(r, headers)
+    with patch('pandas.DataFrame.__init__', return_value=None) as mock_df_init, \
+            patch('pandas.DataFrame.to_csv') as mock_to_csv:
 
-        # THEN: Verifica se os dados foram gerados corretamente
-        assert len(equipment_data) == r, "O número de linhas geradas não é igual ao esperado"
-        assert list(equipment_data.columns) == headers, "As colunas geradas não correspondem aos headers fornecidos"
+        # WHEN: Chamamos o método (que agora não retorna nada)
+        generator.generate_data_equipments(10, headers, 2022, 2023)
 
-        # AND: Verifica se o método to_csv foi chamado corretamente
+        # THEN: Verificamos como o DataFrame foi inicializado
+        args, kwargs = mock_df_init.call_args
+
+        assert 'columns' in kwargs, "O DataFrame não recebeu as colunas no construtor."
+        assert kwargs['columns'] == headers, "As colunas geradas não correspondem aos headers fornecidos."
+
+        data_passed = args[1] if len(args) > 1 else []
+        assert len(data_passed) == 0, "O número de linhas geradas não é igual ao esperado, deveria ser 0."
+
+        # AND: Verifica se o to_csv foi chamado corretamente
         mock_to_csv.assert_called_once_with('./data/equipments.csv', index=False)
 
 
-def test_insert_layer_bronze():
+def test_insert_layer():
     # GIVEN: Uma instância de UploadToBronze e um row de exemplo
     uploader = UploadToBronze()
     row = {
@@ -80,7 +86,7 @@ def test_insert_layer_bronze():
         )
 
 
-def test_read_layer_bronze():
+def test_read_layer():
     # GIVEN: Uma instância de ReadDataBronze e os mocks necessários
     reader = ReadDataBronze()
     table_name = "layer_bronze.bronze_data"
@@ -132,6 +138,8 @@ def test_derive_data():
     expected_data = {
         'equipment_id': [1, 1, 2, 2],
         'temperature': [220.0, 230.0, 240.0, 250.0],
+        'pressure': [2.3, 2.5, 2.6, 2.7],
+        'vibration_level': [0.5, 0.6, 0.7, 0.8],
         'temperature_mean': [225.0, 225.0, 245.0, 245.0],
         'vibration_level_mean': [0.55, 0.55, 0.75, 0.75],
         'temperature_std': [7.07, 7.07, 7.07, 7.07],
