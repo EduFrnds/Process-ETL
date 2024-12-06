@@ -1,6 +1,7 @@
 # ED-DATA
 
-![image](https://github.com/user-attachments/assets/666ce59f-cc43-46cb-88c1-598c4708d3ef)
+![image](![image](https://github.com/user-attachments/assets/53bdf703-e32f-4242-a772-4ff5c4a3b7cc)
+)
 
 Arquitetura: v1
 
