@@ -1,6 +1,6 @@
 # ED-DATA
 
-![image](![image](https://github.com/user-attachments/assets/53bdf703-e32f-4242-a772-4ff5c4a3b7cc))
+![image]((https://github.com/user-attachments/assets/53bdf703-e32f-4242-a772-4ff5c4a3b7cc))
 Arquitetura: v1
 
 ## Contexto PROJETO
