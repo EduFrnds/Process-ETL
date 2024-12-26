@@ -7,6 +7,8 @@ from etl.layer_gold.transformation import DataTransformationGold
 from etl.layer_gold.upload import UploadToGold
 from etl.layer_silver.transformation import DataTransformationSilver
 from etl.layer_silver.upload import UploadToSilver
+from gcp.gcp_storage import ManagerGCP
+
 from logs.log_config import logging_data
 
 
@@ -116,6 +118,18 @@ if __name__ == '__main__':
 
     process_gold_layer()
     BaseLoader.load_csv_and_insert('data/gold_data.csv', UploadToGold, 'insert_layer_gold')
+
+    # Instancia a classe ManagerGCP
+    manager_gcp = ManagerGCP()
+
+    # **Abrir o arquivo** para passar um objeto de arquivo no lugar de uma string:
+    with open('./data/equipments.csv', 'rb') as f:
+        manager_gcp.upload_to_gcs(
+            bucket_name='bkt-etl-project',
+            file=f,
+            file_name='equipments.csv',
+            content_type='text/csv'
+        )
 
     # Deleta os arquivos gerados
     DataManager('./data').delete_files('./data')

@@ -12,3 +12,8 @@ SQLAlchemy~=2.0.35
 plotly~=5.24.1
 pytest~=8.3.3
 flake8~=7.0.0
+etl~=0.0.1
+setuptools~=66.1.1
+dagster~=1.9.5
+google~=3.0.0
+
